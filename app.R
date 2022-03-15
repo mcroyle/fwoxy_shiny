@@ -12,6 +12,7 @@ library(grid)
 library(gridExtra)
 library(lattice)
 library(tidyr)
+library(markdown)
 
 # Define UI for fwoxy
 # Each slider is an input into the fwoxy model
@@ -45,12 +46,14 @@ ui <- fluidPage(
        sliderInput("wspd_const", h4("Wind speed (m/s)"),
                         min = 0, max = 6, value = 3, step = 1) 
        
-     ),
+   ),
+   
+
    # Output panel 
    mainPanel(
         plotOutput('oxyPlot'),
-        plotOutput('fluxPlot')
-      
+        plotOutput('fluxPlot'),
+        actionButton("show", "Help")
     )
   )
 )
@@ -144,6 +147,17 @@ server <- function(input, output) {
     print(fluxPlot)
   }
  )
+  
+  observeEvent(input$show, {
+    showModal(modalDialog(
+      includeMarkdown("README.Rmd"),
+      title = "Help",
+      footer = modalButton("Dismiss"),
+      size = c("l"),
+      easyClose = TRUE
+    ),
+    )
+  })
 }
 
 # Run the application 
